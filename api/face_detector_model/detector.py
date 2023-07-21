@@ -6,7 +6,7 @@ import face_recognition
 
 DEFAULT_ENCODINGS_PATH = Path("models/encodings.pkl")
 
-def recognize_faces(image, model: str = "hog", encodings_location: Path = DEFAULT_ENCODINGS_PATH) -> list(str):
+def recognize_faces(image, model: str = "hog", encodings_location: Path = DEFAULT_ENCODINGS_PATH):
     faces = []
 
     with encodings_location.open(mode="rb") as f:
