@@ -1,10 +1,12 @@
+from django.conf import settings
 import pickle
 from collections import Counter
 from pathlib import Path
 import face_recognition
 
 
-DEFAULT_ENCODINGS_PATH = Path("models/encodings.pkl")
+DEFAULT_ENCODINGS_PATH = Path("api/face_detector_model/models/encodings.pkl")
+
 
 def recognize_faces(image, model: str = "hog", encodings_location: Path = DEFAULT_ENCODINGS_PATH):
     faces = []
@@ -14,16 +16,14 @@ def recognize_faces(image, model: str = "hog", encodings_location: Path = DEFAUL
 
     input_image = face_recognition.load_image_file(image)
 
-    input_face_locations = face_recognition.face_locations(input_image, model=model)
-    input_face_encodings = face_recognition.face_encodings(input_image, input_face_locations)
+    input_face_encodings = face_recognition.face_encodings(input_image)
 
-    for bounding_box, unknown_encoding in zip(input_face_locations, input_face_encodings):
+    for unknown_encoding in input_face_encodings:
         name = _recognize_face(unknown_encoding, loaded_encodings)
         if not name:
             name = "Unknown"
         faces.append(name)
     return faces
-
 
 
 def _recognize_face(unknown_encoding, loaded_encodings):
